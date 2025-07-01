@@ -4,9 +4,9 @@
   "description": "SAAS platform for converting ideas to social media videos",
   "main": "index.js",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "dev": "concurrently \"npm run server\" \"cd frontend && npm run dev\"",
+    "server": "nodemon server/index.js",
+    "frontend": "cd frontend && npm run dev",
     "server": "node server/index.js"
   },
   "dependencies": {
@@ -18,8 +18,8 @@
     "stripe": "^14.0.0",
     "bcryptjs": "^2.4.3",
     "nodemon": "^3.0.0"
-    "bcryptjs": "^2.4.3"
-  },
+    "nodemon": "^3.0.0",
+    "concurrently": "^8.2.0"
   "devDependencies": {
     "@types/node": "^20.0.0",
     "@types/react": "^18.0.0",
