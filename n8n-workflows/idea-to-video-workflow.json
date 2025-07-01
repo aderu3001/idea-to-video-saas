@@ -1,5 +1,5 @@
 {
-  "name": "Idea to Video Workflow",
+  "name": "Multi-User Idea to Video Workflow",
   "nodes": [
     {
       "parameters": {
@@ -22,26 +22,26 @@
             {
               "name": "idea",
               "value": "={{ $json.idea }}"
-            },
+        "bodyParameters": {
+          "parameters": [
             {
               "name": "userId",
               "value": "={{ $json.userId }}"
+            },
+            {
+              "name": "generationId",
+              "value": "={{ $json.generationId }}"
+            },
+            {
+              "name": "idea",
+              "value": "={{ $json.idea }}"
+            },
+            {
+              "name": "userCredentials",
+              "value": "={{ $json.userCredentials }}"
             }
           ]
         }
-      },
-      "id": "process-idea",
-      "name": "Process Idea",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.1,
-      "position": [460, 300]
-    },
-    {
-      "parameters": {
-        "url": "https://api.kie.ai/v1/video/generate",
-        "authentication": "headerAuth",
-        "sendBody": true,
-        "bodyParameters": {
           "parameters": [
             {
               "name": "prompt",
@@ -72,10 +72,10 @@
       "id": "wait-for-video",
       "name": "Wait for Video",
       "type": "n8n-nodes-base.wait",
-      "typeVersion": 1,
-      "position": [900, 300]
-    },
-    {
+            {
+              "name": "user_token",
+              "value": "={{ $json.userCredentials.instagram.access_token }}"
+            }
       "parameters": {
         "url": "https://api.blotato.com/v1/instagram/post",
         "authentication": "headerAuth",
@@ -92,10 +92,10 @@
             }
           ]
         }
-      },
-      "id": "post-instagram",
-      "name": "Post to Instagram",
-      "type": "n8n-nodes-base.httpRequest",
+            {
+              "name": "user_token",
+              "value": "={{ $json.userCredentials.youtube.access_token }}"
+            }
       "typeVersion": 4.1,
       "position": [1120, 200]
     },
@@ -112,10 +112,10 @@
             },
             {
               "name": "title",
-              "value": "={{ $json.title }}"
+            {
+              "name": "user_token",
+              "value": "={{ $json.userCredentials.tiktok.access_token }}"
             }
-          ]
-        }
       },
       "id": "post-youtube",
       "name": "Post to YouTube",
