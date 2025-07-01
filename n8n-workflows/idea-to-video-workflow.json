@@ -1,0 +1,207 @@
+{
+  "name": "Idea to Video Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "idea-submit",
+        "responseMode": "responseNode"
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.BACKEND_URL }}/api/process-idea",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "idea",
+              "value": "={{ $json.idea }}"
+            },
+            {
+              "name": "userId",
+              "value": "={{ $json.userId }}"
+            }
+          ]
+        }
+      },
+      "id": "process-idea",
+      "name": "Process Idea",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://api.kie.ai/v1/video/generate",
+        "authentication": "headerAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "prompt",
+              "value": "={{ $json.videoPrompt }}"
+            },
+            {
+              "name": "model",
+              "value": "veo-2"
+            },
+            {
+              "name": "duration",
+              "value": 5
+            }
+          ]
+        }
+      },
+      "id": "generate-video",
+      "name": "Generate Video (Kie.ai)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "amount": 30,
+        "unit": "seconds"
+      },
+      "id": "wait-for-video",
+      "name": "Wait for Video",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://api.blotato.com/v1/instagram/post",
+        "authentication": "headerAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "media_url",
+              "value": "={{ $json.videoUrl }}"
+            },
+            {
+              "name": "caption",
+              "value": "={{ $json.caption }}"
+            }
+          ]
+        }
+      },
+      "id": "post-instagram",
+      "name": "Post to Instagram",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1120, 200]
+    },
+    {
+      "parameters": {
+        "url": "https://api.blotato.com/v1/youtube/upload",
+        "authentication": "headerAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "video_url",
+              "value": "={{ $json.videoUrl }}"
+            },
+            {
+              "name": "title",
+              "value": "={{ $json.title }}"
+            }
+          ]
+        }
+      },
+      "id": "post-youtube",
+      "name": "Post to YouTube",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://api.blotato.com/v1/tiktok/post",
+        "authentication": "headerAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "video_url",
+              "value": "={{ $json.videoUrl }}"
+            },
+            {
+              "name": "caption",
+              "value": "={{ $json.caption }}"
+            }
+          ]
+        }
+      },
+      "id": "post-tiktok",
+      "name": "Post to TikTok",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1120, 400]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Process Idea",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Idea": {
+      "main": [
+        [
+          {
+            "node": "Generate Video (Kie.ai)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Video (Kie.ai)": {
+      "main": [
+        [
+          {
+            "node": "Wait for Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for Video": {
+      "main": [
+        [
+          {
+            "node": "Post to Instagram",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Post to YouTube",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Post to TikTok",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
