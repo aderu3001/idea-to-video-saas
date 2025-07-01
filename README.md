@@ -5,16 +5,16 @@ Transform your ideas into engaging social media videos automatically.
 ## Features
 - AI-powered video generation from text ideas
 - Multi-platform posting (Instagram, YouTube, TikTok)
-- Automated workflow with n8n
-- Subscription-based monetization
+- Video generation via Kie.ai (Veo API)
+- Social media posting via Blotato
 
 ## Tech Stack
 - Frontend: Next.js + React
 - Backend: Node.js + Express
 - Database: PostgreSQL
 - Workflow: n8n
-- Video Generation: Google Veo2
-- Payments: Stripe
+- Video Generation: Kie.ai (Veo API)
+- Social Posting: Blotato
 - Hosting: DigitalOcean
 
 ## Getting Started
@@ -22,7 +22,7 @@ Transform your ideas into engaging social media videos automatically.
 npm install
 npm run dev
 ```
-
+User Input → n8n Workflow → Kie.ai Video → Blotato Posting
 ## Architecture
 ```
 User Input → n8n Workflow → Video Generation → Social Media Posting
